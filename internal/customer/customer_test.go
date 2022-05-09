@@ -90,6 +90,22 @@ func TestCUST_REQ_005(t *testing.T) {
 	cust = New()
 	err = cust.SetLastName("")
 	if err == nil {
-		t.Fatal("our lastName provided should no be okay, we should have had an error")
+		t.Fatal("our lastName provided is empty, we should have had an error")
+	}
+}
+
+// CUST_REQ_006 I should not be able to create a customer that has the same email as an existing customer
+func TestCUST_REQ_006(t *testing.T) {
+	cust := New()
+	email := "fred.bloggs@CUST_REQ_006.com"
+	err := cust.SetEmail(email)
+	if err != nil {
+		t.Fatal("this email is unique, we should not have been returned an error")
+	}
+
+	cust2 := New()
+	err = cust2.SetEmail(email)
+	if err == nil {
+		t.Fatal("this email is not unique, we should have been returned an error")
 	}
 }
