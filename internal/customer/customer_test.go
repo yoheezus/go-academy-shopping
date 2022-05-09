@@ -58,8 +58,9 @@ func TestCUST_REQ_004(t *testing.T) {
 	}
 
 	if cust.GetFirstName() != firstName {
-		t.Fatal("firstName of cust did not match provided")
 		t.Log("firstName:", firstName)
+		t.Log("cust.GetFirstName():", cust.GetFirstName())
+		t.Fatal("firstName of cust did not match provided")
 	}
 
 	//unhappy path
@@ -82,8 +83,8 @@ func TestCUST_REQ_005(t *testing.T) {
 	}
 
 	if cust.GetLastName() != lastName {
-		t.Fatal("lastName of cust did not match provided")
 		t.Log("lastName:", lastName)
+		t.Fatal("lastName of cust did not match provided")
 	}
 
 	//unhappy path
@@ -152,12 +153,12 @@ func TestCUST_REQ_009(t *testing.T) {
 
 	returned, err := GetByID(expected.ID)
 	if err != nil {
-		t.Fatal("the id in expected does not return a customer, we got an error")
 		t.Log("err:", err)
+		t.Fatal("the id in expected does not return a customer, we got an error")
 	}
 	if returned != expected {
-		t.Fatal("returned customer is not the same as the expected")
 		t.Log("returned:", returned)
 		t.Log("expected:", expected)
+		t.Fatal("returned customer is not the same as the expected")
 	}
 }
