@@ -109,3 +109,35 @@ func TestCUST_REQ_006(t *testing.T) {
 		t.Fatal("this email is not unique, we should have been returned an error")
 	}
 }
+
+// CUST_REQ_007 I should be able to create a customer that has the same first name as an existing customer
+func TestCUST_REQ_007(t *testing.T) {
+	cust := New()
+	firstName := "fred"
+	err := cust.SetFirstName(firstName)
+	if err != nil {
+		t.Fatal("this first name is unique, we should not have been returned an error")
+	}
+
+	cust2 := New()
+	err = cust2.SetFirstName(firstName)
+	if err != nil {
+		t.Fatal("this first name is not unique, we should have been returned an error")
+	}
+}
+
+// CUST_REQ_008 I should be able to create a customer that has the same last name as an existing customer
+func TestCUST_REQ_008(t *testing.T) {
+	cust := New()
+	lastName := "bloggs"
+	err := cust.SetLastName(lastName)
+	if err != nil {
+		t.Fatal("this last name is unique, we should not have been returned an error")
+	}
+
+	cust2 := New()
+	err = cust2.SetLastName(lastName)
+	if err != nil {
+		t.Fatal("this last name is not unique, we should have been returned an error")
+	}
+}
