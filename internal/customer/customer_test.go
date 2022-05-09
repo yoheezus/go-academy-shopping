@@ -69,3 +69,27 @@ func TestCUST_REQ_004(t *testing.T) {
 		t.Fatal("our firstName provided should no be okay, we should have had an error")
 	}
 }
+
+// CUST_REQ_005 I should not be able to create a new customer that has no last name
+func TestCUST_REQ_005(t *testing.T) {
+	//happy path
+	var cust customer
+	cust = New()
+	lastName := "bloggs"
+	err := cust.SetLastName(lastName)
+	if err != nil {
+		t.Fatal("our lastName provided should be okay, we should not have had an error")
+	}
+
+	if cust.GetLastName() != lastName {
+		t.Fatal("lastName of cust did not match provided")
+		t.Log("lastName:", lastName)
+	}
+
+	//unhappy path
+	cust = New()
+	err = cust.SetLastName("")
+	if err == nil {
+		t.Fatal("our lastName provided should no be okay, we should have had an error")
+	}
+}
