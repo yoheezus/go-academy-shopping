@@ -141,3 +141,23 @@ func TestCUST_REQ_008(t *testing.T) {
 		t.Fatal("this last name is not unique, we should have been returned an error")
 	}
 }
+
+// CUST_REQ_009 After a customer is created, I should be able to get that customer back by its unique number
+func TestCUST_REQ_009(t *testing.T) {
+	var expected customer
+	expected = New()
+	expected.SetEmail("expected@TestCUST_REQ_009.com")
+	expected.SetFirstName("terry")
+	expected.SetLastName("bloggs")
+
+	returned, err := GetByID(expected.ID)
+	if err != nil {
+		t.Fatal("the id in expected does not return a customer, we got an error")
+		t.Log("err:", err)
+	}
+	if returned != expected {
+		t.Fatal("returned customer is not the same as the expected")
+		t.Log("returned:", returned)
+		t.Log("expected:", expected)
+	}
+}
