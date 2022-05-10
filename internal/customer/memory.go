@@ -20,7 +20,7 @@ func save(c *customer) error {
 func restore(id int) (customer, error) {
 	c, exists := customers[id]
 	if !exists {
-		return *c, errors.New("customer with that id does not exist")
+		return customer{}, errors.New("customer with that id does not exist")
 	}
 	return *c, nil
 }
