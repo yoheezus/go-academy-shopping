@@ -161,4 +161,11 @@ func TestCUST_REQ_009(t *testing.T) {
 		t.Log("expected:", expected)
 		t.Fatal("returned customer is not the same as the expected")
 	}
+
+	// check what happends when we try to get a customer with an invalid ID
+	returned, err = GetByID(-1)
+	if err == nil {
+		t.Log("returned:", returned)
+		t.Fatal("we got a returned customer, we should have got back an error")
+	}
 }
