@@ -2,7 +2,7 @@ package customer
 
 import "errors"
 
-// Map of customers id to a customer pointer
+// map of customers id to a customer pointer
 var customers map[int]*customer
 
 func init() {
@@ -10,7 +10,7 @@ func init() {
 }
 
 func save(c *customer) error {
-	if c.ID == 0 { // dot notation automatically de-references pointers
+	if c.ID == 0 {
 		return errors.New("id cannot be 0")
 	}
 	customers[c.ID] = c
@@ -20,7 +20,7 @@ func save(c *customer) error {
 func restore(id int) (customer, error) {
 	c, exists := customers[id]
 	if !exists {
-		return customer{}, errors.New("customer with that id doesn't exist")
+		return customer{}, errors.New("customer with that id does not exist")
 	}
 	return *c, nil
 }

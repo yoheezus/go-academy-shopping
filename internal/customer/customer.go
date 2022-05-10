@@ -4,33 +4,45 @@ import "errors"
 
 var (
 	nextIdentifier int
-	AllEmails      map[string]bool
+	usedEmails     map[string]bool
 )
 
 func init() {
-	AllEmails = make(map[string]bool)
+	usedEmails = make(map[string]bool)
 }
 
 func New() customer {
 	nextIdentifier++
-	newCustomer := customer{ID: nextIdentifier}
-	save(&newCustomer)
-	return newCustomer
+	c := customer{
+		ID: nextIdentifier,
+	}
+	save(&c)
+	return c
+}
+
+func GetByID(id int) (customer, error) {
+	return restore(id)
 }
 
 func (c *customer) SetEmail(email string) error {
 	if email == "" {
 		return errors.New("email cannot be blank")
 	}
-
 	if checkIfEmailInUse(email) {
-		return errors.New("email cannot be a duplicate")
+		return errors.New("email already used")
 	}
-
+	addInUseEmail(email)
 	c.Email = email
-	updateInUseEmail(email)
 	save(c)
 	return nil
+}
+
+func checkIfEmailInUse(email string) bool {
+	return usedEmails[email]
+}
+
+func addInUseEmail(email string) {
+	usedEmails[email] = true
 }
 
 func (c *customer) GetEmail() string {
@@ -61,16 +73,4 @@ func (c *customer) SetLastName(lastName string) error {
 
 func (c *customer) GetLastName() string {
 	return c.LastName
-}
-
-func checkIfEmailInUse(email string) bool {
-	return AllEmails[email]
-}
-
-func updateInUseEmail(email string) {
-	AllEmails[email] = true
-}
-
-func GetByID(id int) (customer, error) {
-	return restore(id)
 }
