@@ -74,3 +74,23 @@ func TestPRODUCT_REQ_005(t *testing.T) {
 		t.Fatal("PRODUCT_REQ_005: I should be able to create a new product that has the same stock amount as an existing product")
 	}
 }
+
+// PRODUCT_REQ_006 Once created, I should be able to get a product back by its unique identifier
+func TestPRODUCT_REQ_006(t *testing.T) {
+	expected := New()
+	expected.SetName("coffee")
+	expected.SetPrice(350)
+	expected.SetStock(200)
+
+	returned, err := GetByID(expected.GetID())
+	if err != nil {
+		t.Log(err)
+		t.Fatal("PRODUCT_REQ_006: Once created, I should be able to get a product back by its unique identifier")
+	}
+
+	if expected != returned {
+		t.Log("expected:", expected)
+		t.Log("returned:", returned)
+		t.Fatal("PRODUCT_REQ_006: Once created, I should be able to get a product back by its unique identifier")
+	}
+}
