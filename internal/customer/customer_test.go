@@ -4,8 +4,7 @@ import "testing"
 
 // CUST_REQ_001 Once created, a customer should have a unique number that identifies them
 func TestCUST_REQ_001(t *testing.T) {
-	var cust customer
-	cust = New()
+	cust := New()
 	if cust.ID == 0 {
 		t.Fatal("new customer does not have a unique identifier")
 	}
@@ -13,10 +12,8 @@ func TestCUST_REQ_001(t *testing.T) {
 
 // CUST_REQ_002 No two customers should be able to have the same identifer
 func TestCUST_REQ_002(t *testing.T) {
-	var cust customer
-	cust = New()
-	var cust2 customer
-	cust2 = New()
+	cust := New()
+	cust2 := New()
 	if cust.ID == cust2.ID {
 		t.Fatal("two customers have the same identifier")
 	}
@@ -144,20 +141,28 @@ func TestCUST_REQ_008(t *testing.T) {
 
 // CUST_REQ_009 After a customer is created, I should be able to get that customer back by its unique number
 func TestCUST_REQ_009(t *testing.T) {
-	var expected customer
-	expected = New()
+	expected := New()
 	expected.SetEmail("expected@TestCUST_REQ_009.com")
 	expected.SetFirstName("terry")
 	expected.SetLastName("bloggs")
 
 	returned, err := GetByID(expected.ID)
 	if err != nil {
-		t.Fatal("the id in expected does not return a customer, we got an error")
 		t.Log("err:", err)
+		t.Fatal("the id in expected does not return a customer, we got an error")
+
 	}
 	if returned != expected {
-		t.Fatal("returned customer is not the same as the expected")
 		t.Log("returned:", returned)
 		t.Log("expected:", expected)
+		t.Fatal("returned customer is not the same as the expected")
+
 	}
+	// check what happens when we try to get a customer with an invalid id
+	returned, err = GetByID(-1)
+	if err == nil {
+		t.Log("returned", returned)
+		t.Fatal("We got back a customer, we should have got an error")
+	}
+
 }
