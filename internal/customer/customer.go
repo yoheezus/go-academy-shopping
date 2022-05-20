@@ -24,6 +24,14 @@ func GetByID(id int) (customer, error) {
 	return restore(id)
 }
 
+func GetAll() []customer {
+	list := make([]customer, 0)
+	for _, c := range customers {
+		list = append(list, *c)
+	}
+	return list
+}
+
 func (c *customer) SetEmail(email string) error {
 	if email == "" {
 		return errors.New("email cannot be blank")

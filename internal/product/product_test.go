@@ -157,3 +157,117 @@ func TestPRODUCT_REQ_006(t *testing.T) {
 		t.Fatal("PRODUCT_REQ_006: Once created, I should be able to get a product back by its unique identifier")
 	}
 }
+
+// PRODUCT_REQ_007 Once created, I should be able to update a product's price
+func TestPRODUCT_REQ_007(t *testing.T) {
+	p1 := New()
+	initialPrice := 200
+	err := p1.SetPrice(initialPrice)
+	if err != nil {
+		t.Fatal("price could not be properly set")
+	}
+
+	if p1.GetPrice() != initialPrice {
+		t.Log("p1.GetPrice():", p1.GetPrice())
+		t.Fatal("price has not been set correctly")
+	}
+
+	updatedPrice := 500
+	err = p1.SetPrice(updatedPrice)
+
+	if p1.GetPrice() != updatedPrice {
+		t.Log("p1.GetPrice():", p1.GetPrice())
+		t.Log("updatedPrice:", updatedPrice)
+		t.Fatal("price was not updated")
+	}
+}
+
+// PRODUCT_REQ_008 Once created, I should be able to update a product's stock amount
+func TestPRODUCT_REQ_008(t *testing.T) {
+	p1 := New()
+	initialStock := 200
+	err := p1.SetStock(initialStock)
+	if err != nil {
+		t.Fatal("stock could not be properly set")
+	}
+
+	if p1.GetStock() != initialStock {
+		t.Log("p1.GetStock():", p1.GetStock())
+		t.Fatal("stock has not been set correctly")
+	}
+
+	updatedStock := 500
+	err = p1.SetStock(updatedStock)
+
+	if p1.GetStock() != updatedStock {
+		t.Log("p1.GetStock():", p1.GetStock())
+		t.Log("updatedStock:", updatedStock)
+		t.Fatal("stock was not updated")
+	}
+
+	updatedStock = -1
+	err = p1.SetStock(updatedStock)
+	if err == nil {
+		t.Fatal("cannot set stock to below 0")
+	}
+}
+
+// PRODUCT_REQ_009 Once created, I should be able to put a product on sale, so it's returned price should be a percentage of its full price
+func TestPRODUCT_REQ_009(t *testing.T) {
+	p1 := New()
+	initialPrice := 300
+	p1.SetPrice(initialPrice)
+	t.Log("Initial Percentage:", p1.SalePercentage)
+	discount := 50
+	err := p1.SetSalePercentage(discount)
+	discountedPrice := 150
+
+	if err != nil {
+		t.Fatal("was not able to discount product")
+	}
+
+	if p1.GetPrice() != discountedPrice {
+		t.Log("discount:", discount)
+		t.Log("p1.SalePercentage", p1.SalePercentage)
+		t.Log("p1.GetPrice():", p1.GetPrice())
+		t.Log("discountedPrice", discountedPrice)
+		t.Fatal("price is not equal to discountedPrice after discount")
+	}
+
+	_ = p1.SetSalePercentage(0)
+	if p1.GetPrice() != initialPrice {
+		t.Fatal("price did not reset to original")
+	}
+
+}
+
+// PRODUCT_REQ_010 I should not be able to create a new product that has a negative stock
+func TestPRODUCT_REQ_010(t *testing.T) {
+	p1 := New()
+	err := p1.SetStock(-50)
+
+	if err == nil {
+		t.Fatal("stock cannot be set to a negative number")
+	}
+}
+
+// PRODUCT_REQ_011 I should not be able to create a new product that has a negative price
+func TestPRODUCT_REQ_011(t *testing.T) {
+	p1 := New()
+	err := p1.SetPrice(-50)
+
+	if err == nil {
+		t.Fatal("price cannot be set to a negative number")
+	}
+}
+
+// PRODUCT_REQ_012 I should not be able to create a new product that has a sale percentage under 90% off
+func TestPRODUCT_REQ_012(t *testing.T) {
+	p1 := New()
+	err := p1.SetSalePercentage(99)
+
+	if err == nil {
+		t.Fatal("cannot set sale percentage above 90%")
+	}
+
+}
