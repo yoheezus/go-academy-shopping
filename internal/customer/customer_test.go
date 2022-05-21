@@ -1,6 +1,8 @@
 package customer
 
-import "testing"
+import (
+	"testing"
+)
 
 // CUST_REQ_001 Once created, a customer should have a unique number that identifies them
 func TestCUST_REQ_001(t *testing.T) {
@@ -165,4 +167,150 @@ func TestCUST_REQ_009(t *testing.T) {
 		t.Fatal("we got a returned customer, we should have got back an error")
 	}
 
+}
+
+// CUST_REQ_010 = After a customer is created, I should be able to update that customer by its unique number
+func TestCUST_REQ_010(t *testing.T) {
+	original := New()
+	original.SetEmail("original@TestCUST_REQ_010.com")
+	original.SetFirstName("Bob")
+	original.SetLastName("Dole")
+
+	returned, err := GetByID(original.ID)
+	if err != nil {
+		t.Log("err:", err)
+		t.Fatal("Expected customer was not returned, even though it exists")
+	}
+	// Update returned customers field
+	returned.SetFirstName("John")
+	returned.SetLastName("Silver")
+	returned.SetEmail("altered@testCUST_REQ_010.com")
+
+	updated, err := GetByID(original.ID)
+	if err != nil {
+		t.Log("err:", err)
+		t.Fatal("Expected customer was not returned, even though it exists")
+	}
+	if updated.FirstName == original.FirstName {
+		t.Fatal("Updated first name matches original firstname after updating")
+	}
+
+	if updated.LastName == original.LastName {
+		t.Fatal("Updated first name matches original firstname after updating")
+	}
+
+	if updated.Email != original.Email {
+		t.Fatal("It should not be possible to update the email")
+	}
+}
+
+// CUST_REQ_011 - I should not be able to update a customer's first name to an empty value
+func TestCUST_REQ_011(t *testing.T) {
+	original := New()
+	original.SetEmail("original@TestCUST_REQ_011.com")
+	original.SetFirstName("Bob")
+	original.SetLastName("Dole")
+
+	returned, err := GetByID(original.ID)
+	if err != nil {
+		t.Log("err:", err)
+		t.Fatal("Expected customer was not returned, even though it exists")
+	}
+	// Update returned customers field
+	err = returned.SetFirstName("")
+	if err == nil {
+		t.Log("err:", err)
+		t.Log("Customer first name was:", original.FirstName)
+		t.Log("Customer first name is now:", returned.FirstName)
+		t.Fatal("Success on updating firstname to empty when it should be fail.")
+	}
+
+}
+
+// CUST_REQ_012 - I should not be able to update a customer's last name to an empty value
+func TestCUST_REQ_012(t *testing.T) {
+	original := New()
+	original.SetEmail("original@TestCUST_REQ_012.com")
+	original.SetFirstName("Bob")
+	original.SetLastName("Dole")
+
+	returned, err := GetByID(original.ID)
+	if err != nil {
+		t.Log("err:", err)
+		t.Fatal("Expected customer was not returned, even though it exists")
+	}
+	// Update returned customers field
+	err = returned.SetLastName("")
+	if err == nil {
+		t.Log("err:", err)
+		t.Log("Customer last name was:", original.LastName)
+		t.Log("Customer last name is now:", returned.LastName)
+		t.Fatal("Success on updating lastname to empty when it should be fail.")
+	}
+
+}
+
+// CUST_REQ_013 - I should not be able to update a customer's email at all
+func TestCUST_REQ_013(t *testing.T) {
+	original := New()
+	original.SetEmail("original@TestCUST_REQ_013.com")
+	original.SetFirstName("Bob")
+	original.SetLastName("Dole")
+
+	returned, err := GetByID(original.ID)
+	if err != nil {
+		t.Log("err:", err)
+		t.Fatal("Expected customer was not returned, even though it exists")
+	}
+
+	err = returned.SetEmail("altered@TestCUST_REQ_013.com")
+	if err == nil {
+		t.Fatal("Success on changing email after it was set. This should fail")
+	}
+
+	err = returned.SetEmail("")
+	if err == nil {
+		t.Fatal("Success on changing email to empty after it was set. This should fail")
+	}
+
+	if returned.Email != original.Email {
+		t.Fatal("Email was changed from the original when this should not be possible.")
+	}
+
+}
+
+// CUST_REQ_014 - I should be able to list out all users that have been created
+func TestCUST_REQ_014(t *testing.T) {
+	// Clear out previous customers
+	for k := range customers {
+		delete(customers, k)
+	}
+
+	cust1 := New()
+	cust2 := New()
+
+	all_customers := GetAll()
+
+	if len(all_customers) != 2 {
+		t.Log("all customers:", all_customers)
+		t.Fatal("customers slice should have 2 values, but it does not.")
+	}
+
+	cust3 := New()
+	all_customers = GetAll()
+	if len(all_customers) != 3 {
+		t.Log("all customers:", all_customers)
+		t.Fatal("customers slice should have 3 values, but it does not.")
+	}
+
+	manual_customers := make([]customer, 0)
+	manual_customers = append(manual_customers, cust1, cust2, cust3)
+
+	for i, c := range all_customers {
+		if c.ID != manual_customers[i].ID {
+			t.Log("all_customers value", c)
+			t.Log("manual_customers value", manual_customers[i])
+			t.Fatal("Customer in all_customers does not match customer in manual_customers")
+		}
+	}
 }

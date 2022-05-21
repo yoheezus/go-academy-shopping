@@ -28,6 +28,7 @@ func main() {
 	router.GET("/customers/all", GetAllCustomers)
 	router.GET("/customers", GetCustomerById)
 	router.POST("/customers", createCustomer)
+	router.PATCH("/customers", updateCustomer)
 
 	router.Run("0.0.0.0:8080")
 }
@@ -42,11 +43,22 @@ func createCustomer(c *gin.Context) {
 	email := c.PostForm("email")
 
 	fmt.Printf("first_name: %s; last_name: %s; email: %s", firstName, lastName, email)
-	// Write Queries to customer
-	cust := customer.New()
-	cust.SetFirstName(firstName)
-	cust.SetLastName(lastName)
-	cust.SetEmail(email)
+
+	if customer.CheckIfEmailInUse(email) {
+		c.IndentedJSON(http.StatusBadRequest, "Invalid request, cannot create customer")
+	} else {
+		// Write Queries to customer
+		cust := customer.New()
+		cust.SetFirstName(firstName)
+		cust.SetLastName(lastName)
+		err := cust.SetEmail(email)
+		if err != nil {
+			c.IndentedJSON(http.StatusBadRequest, err)
+		} else {
+			c.IndentedJSON(http.StatusCreated, cust)
+		}
+	}
+
 }
 
 func GetCustomerById(c *gin.Context) {
@@ -57,6 +69,29 @@ func GetCustomerById(c *gin.Context) {
 
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, cust)
+	} else {
+		c.IndentedJSON(http.StatusAccepted, cust)
+	}
+
+}
+
+func updateCustomer(c *gin.Context) {
+	var id int
+
+	firstName := c.PostForm("first_name")
+	lastName := c.PostForm("last_name")
+
+	id, _ = strconv.Atoi(c.Query("id"))
+	cust, err := customer.GetByID(id)
+
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, cust)
+	}
+
+	if err = cust.SetFirstName(firstName); err != nil {
+		c.IndentedJSON(http.StatusPreconditionFailed, cust)
+	} else if err = cust.SetLastName(lastName); err != nil {
+		c.IndentedJSON(http.StatusPreconditionFailed, cust)
 	} else {
 		c.IndentedJSON(http.StatusCreated, cust)
 	}

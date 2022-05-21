@@ -33,10 +33,13 @@ func GetAll() []customer {
 }
 
 func (c *customer) SetEmail(email string) error {
+	if c.Email != "" {
+		return errors.New("cannot update email once it has been set")
+	}
 	if email == "" {
 		return errors.New("email cannot be blank")
 	}
-	if checkIfEmailInUse(email) {
+	if CheckIfEmailInUse(email) {
 		return errors.New("email already used")
 	}
 	addInUseEmail(email)
@@ -45,7 +48,7 @@ func (c *customer) SetEmail(email string) error {
 	return nil
 }
 
-func checkIfEmailInUse(email string) bool {
+func CheckIfEmailInUse(email string) bool {
 	return usedEmails[email]
 }
 
