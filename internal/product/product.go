@@ -6,17 +6,25 @@ var (
 	productCounter int
 	productNames   map[string]bool
 	allProducts    map[int]*product
+	faulty_prod    product
 )
 
 func init() {
 	productNames = make(map[string]bool)
 	allProducts = make(map[int]*product)
+
+	faulty_prod = New("Faulty Product")
+	allProducts[faulty_prod.ID] = &faulty_prod
 }
 
-func New() product {
+func New(name string) product {
 	productCounter++
 	p := product{
 		ID: productCounter,
+	}
+	err := p.SetName(name)
+	if err != nil {
+		return faulty_prod
 	}
 	save(p)
 	return p
@@ -27,6 +35,13 @@ func (p *product) GetName() string {
 }
 
 func (p *product) SetName(productName string) error {
+	if productName == "" {
+		return errors.New("cannot set name to nothing")
+	}
+	if productName == p.ProductName {
+		return nil
+	}
+
 	if _, prs := productNames[productName]; prs {
 		return errors.New("name of product already exists")
 	}
