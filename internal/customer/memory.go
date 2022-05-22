@@ -3,13 +3,13 @@ package customer
 import "errors"
 
 // map of customers id to a customer pointer
-var customers map[int]*customer
+var customers map[int]*Customer
 
 func init() {
-	customers = make(map[int]*customer)
+	customers = make(map[int]*Customer)
 }
 
-func save(c *customer) error {
+func save(c *Customer) error {
 	if c.ID == 0 {
 		return errors.New("id cannot be 0")
 	}
@@ -17,10 +17,10 @@ func save(c *customer) error {
 	return nil
 }
 
-func restore(id int) (customer, error) {
+func restore(id int) (Customer, error) {
 	c, exists := customers[id]
 	if !exists {
-		return customer{}, errors.New("customer with that id does not exist")
+		return Customer{}, errors.New("customer with that id does not exist")
 	}
 	return *c, nil
 }

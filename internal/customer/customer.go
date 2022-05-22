@@ -11,28 +11,28 @@ func init() {
 	usedEmails = make(map[string]bool)
 }
 
-func New() customer {
+func New() Customer {
 	nextIdentifier++
-	c := customer{
+	c := Customer{
 		ID: nextIdentifier,
 	}
 	save(&c)
 	return c
 }
 
-func GetByID(id int) (customer, error) {
+func GetByID(id int) (Customer, error) {
 	return restore(id)
 }
 
-func GetAll() []customer {
-	list := make([]customer, 0)
+func GetAll() []Customer {
+	list := make([]Customer, 0)
 	for _, c := range customers {
 		list = append(list, *c)
 	}
 	return list
 }
 
-func (c *customer) SetEmail(email string) error {
+func (c *Customer) SetEmail(email string) error {
 	if c.Email != "" {
 		return errors.New("cannot update email once it has been set")
 	}
@@ -56,11 +56,11 @@ func addInUseEmail(email string) {
 	usedEmails[email] = true
 }
 
-func (c *customer) GetEmail() string {
+func (c *Customer) GetEmail() string {
 	return c.Email
 }
 
-func (c *customer) SetFirstName(firstName string) error {
+func (c *Customer) SetFirstName(firstName string) error {
 	if firstName == "" {
 		return errors.New("first name cannot be blank")
 	}
@@ -69,11 +69,11 @@ func (c *customer) SetFirstName(firstName string) error {
 	return nil
 }
 
-func (c *customer) GetFirstName() string {
+func (c *Customer) GetFirstName() string {
 	return c.FirstName
 }
 
-func (c *customer) SetLastName(lastName string) error {
+func (c *Customer) SetLastName(lastName string) error {
 	if lastName == "" {
 		return errors.New("last name cannot be blank")
 	}
@@ -82,6 +82,6 @@ func (c *customer) SetLastName(lastName string) error {
 	return nil
 }
 
-func (c *customer) GetLastName() string {
+func (c *Customer) GetLastName() string {
 	return c.LastName
 }

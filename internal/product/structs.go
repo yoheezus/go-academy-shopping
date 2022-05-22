@@ -1,6 +1,6 @@
 package product
 
-type product struct {
+type Product struct {
 	ID             int
 	ProductName    string
 	ProductPrice   int

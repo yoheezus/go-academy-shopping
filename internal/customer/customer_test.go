@@ -24,7 +24,7 @@ func TestCUST_REQ_002(t *testing.T) {
 // CUST_REQ_003 I should not be able to create a new customer that has no email
 func TestCUST_REQ_003(t *testing.T) {
 	//happy path
-	var cust customer
+	var cust Customer
 	cust = New()
 	email := "fred@CUST_REQ_003.com"
 	err := cust.SetEmail(email)
@@ -48,8 +48,7 @@ func TestCUST_REQ_003(t *testing.T) {
 // CUST_REQ_004 I should not be able to create a new customer that has no first name
 func TestCUST_REQ_004(t *testing.T) {
 	//happy path
-	var cust customer
-	cust = New()
+	cust := New()
 	firstName := "fred"
 	err := cust.SetFirstName(firstName)
 	if err != nil {
@@ -73,8 +72,7 @@ func TestCUST_REQ_004(t *testing.T) {
 // CUST_REQ_005 I should not be able to create a new customer that has no last name
 func TestCUST_REQ_005(t *testing.T) {
 	//happy path
-	var cust customer
-	cust = New()
+	cust := New()
 	lastName := "bloggs"
 	err := cust.SetLastName(lastName)
 	if err != nil {
@@ -303,7 +301,7 @@ func TestCUST_REQ_014(t *testing.T) {
 		t.Fatal("customers slice should have 3 values, but it does not.")
 	}
 
-	manual_customers := make([]customer, 0)
+	manual_customers := make([]Customer, 0)
 	manual_customers = append(manual_customers, cust1, cust2, cust3)
 
 	for i, c := range all_customers {

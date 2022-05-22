@@ -8,7 +8,7 @@ var (
 	productStock   int
 	salePercentage int
 
-	test_prod1 = product{
+	test_prod1 = Product{
 		ID:             999,
 		ProductName:    productName,
 		ProductPrice:   productPrice,
@@ -19,8 +19,7 @@ var (
 
 // PRODUCT_REQ_001 Once created, a product should have a unique number that identifies them
 func TestPRODUCT_REQ_001(t *testing.T) {
-	var p product
-	p = New("PRODUCT_REQ_001")
+	p := New("PRODUCT_REQ_001")
 
 	// 0 is the default value for an int
 	if p.GetID() == 0 {
